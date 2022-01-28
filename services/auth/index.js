@@ -9,7 +9,7 @@ class AuthService {
   }
 
   async create(body) {
-    const { id, name, email, subscription, avatarURL } =
+    const { id, name, email, subscription, avatarURL, verificationToken } =
       await UsersRepository.create(body);
     return {
       id,
@@ -17,16 +17,37 @@ class AuthService {
       email,
       subscription,
       avatarURL,
+      verificationToken,
     };
   }
 
   async getUser(email, password) {
     const user = await UsersRepository.findByEmail(email);
     const isValidPassword = await user?.isValidPassword(password);
-    if (!isValidPassword) {
+    if (!isValidPassword || !user.verify) {
       return null;
     }
     return user;
+  }
+
+  async getUserVerifyToken(email) {
+    const user = await UsersRepository.findByEmail(email);
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async isUserVerified(verificationToken) {
+    const userByVerTOken = await UsersRepository.findByVerificationToken(
+      verificationToken,
+    );
+
+    const status = !!userByVerTOken;
+    if (status) {
+      await UsersRepository.updateVerify(userByVerTOken.id, status);
+    }
+    return status;
   }
 
   async updateUserSubscription(id, subscription) {

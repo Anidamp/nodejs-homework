@@ -1,7 +1,11 @@
 import User from '../model/user';
+/* import { randomUUID } from 'crypto';; */
 
 const findByEmail = async email => {
   return await User.findOne({ email });
+};
+const findByVerificationToken = async verificationToken => {
+  return await User.findOne({ verificationToken });
 };
 
 const create = async body => {
@@ -20,6 +24,13 @@ const updateUserSubscription = async (id, subscription) => {
 const updateToken = async (id, token) => {
   return await User.findOneAndUpdate({ _id: id }, { token });
 };
+
+const updateVerify = async (id, status) => {
+  return await User.findOneAndUpdate(
+    { _id: id },
+    { verify: status, verificationToken: null },
+  );
+};
 const updateAvatar = async (id, avatarURL) => {
   return await User.findOneAndUpdate({ _id: id }, { avatarURL });
 };
@@ -32,7 +43,9 @@ export default {
   findByEmail,
   create,
   updateToken,
+  updateVerify,
   updateAvatar,
   findById,
   updateUserSubscription,
+  findByVerificationToken,
 };

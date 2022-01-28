@@ -13,9 +13,11 @@ import {
   getCurrent,
   updateSubscription,
   uploadAvatar,
+  verifyUser,
+  repeatEmailForverifyUser,
 } from '../../../controllers/auth';
 import guard from '../../../middlewares/guard';
-import roleAccess from '../../../middlewares/roleAcces';
+import roleAccess from '../../../middlewares/roleAccess';
 import { upload } from '../../../middlewares/upload';
 
 const router = new Router();
@@ -25,10 +27,12 @@ router.patch(
   [guard, roleAccess(Roles.PRO), validateUpdateSubscription],
   updateSubscription,
 );
-router.post('/signin', validateCreate, registration);
+router.post('/signup', validateCreate, registration);
 router.post('/login', validateCredentials, login);
 router.get('/logout', guard, logout);
 router.patch('/avatars', guard, upload.single('avatar'), uploadAvatar);
 router.get('/current', validateToken, guard, getCurrent);
+router.get('/verify/:verificationToken', verifyUser);
+router.post('/verify', repeatEmailForverifyUser);
 
 export default router;
