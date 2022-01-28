@@ -17,7 +17,7 @@ import {
   repeatEmailForverifyUser,
 } from '../../../controllers/auth';
 import guard from '../../../middlewares/guard';
-import roleAccess from '../../../middlewares/roleAccess';
+import roleAccess from '../../../middlewares/roleAcces';
 import { upload } from '../../../middlewares/upload';
 
 const router = new Router();
