@@ -1,6 +1,7 @@
 import mongooseService from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { Roles } from '../connection/constants';
+import { randomUUID } from 'crypto';
 import gravatar from 'gravatar';
 
 const { Schema, model, SchemaTypes } = mongooseService;
@@ -35,6 +36,17 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
+    verify: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+      default: randomUUID,
+    },
+
     owner: {
       type: SchemaTypes.ObjectId,
       ref: 'user',
